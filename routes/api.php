@@ -1,10 +1,14 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TestController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\TestController;
+use App\Mail\UserActivated;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Route;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -23,8 +27,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('register/admin', [AdminController::class, 'registerAdmin']);
 Route::post('login/admin', [AdminController::class, 'loginAdmin']);
 
-Route::post('register/user',[UserController::class,'register']);
+Route::post('register/user', [UserController::class, 'register']);
+Route::post('users/{id}/activate', [UserController::class, 'activate']);
 
-Route::middleware(['auth:admin'])->group(function () {
-    Route::get('view', [TestController::class, 'index']);
-});
+
+Route::get('test',function(){
+    
+    Mail::to('devsamiralzeer243@gmail.com')->send(new UserActivated());
+
+    });

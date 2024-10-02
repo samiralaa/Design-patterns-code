@@ -42,4 +42,15 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+
+    public function activate()
+    {
+        $this->active = true; // فرضًا إننا عندنا عمود active في الجدول
+        $this->save();
+    
+        // هينادى على الأكشن في الـ Observer
+        $this->fireModelEvent('activated', false);
+    }
+    
 }

@@ -21,17 +21,28 @@ class UserController extends Controller
     public function register(StoreRequest $request) {
        
         $user = User::create($request->all());
+        // user serves pattern will send welcome  email to user After registration
         $this->emailService->sendWelcomeEmail($user);
         return response()->json(['message' => 'User registered']);
     }
 
-    public function login(Request $request) {
-        $credentials = $request->only('email', 'password');
-        if (auth()->attempt($credentials)) {
-            $token = auth()->user()->createToken('authToken')->accessToken;
-            return response()->json(['token' => $token], 200);
-        } else {
-            return response()->json(['error' => 'Unauthorised'], 401);
-        }
+    // public function login(Request $request) {
+    //     $credentials = $request->only('email', 'password');
+    //     if (auth()->attempt($credentials)) {
+    //         $token = auth()->user()->createToken('authToken')->accessToken;
+    //         return response()->json(['token' => $token], 200);
+    //     } else {
+    //         return response()->json(['error' => 'Unauthorised'], 401);
+    //     }
+    // }
+
+    public function activate(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        
+        // تفعيل الحساب
+        $user->activate();
+
+        return response()->json(['message' => 'User account activated successfully', 'user' => $user]);
     }
 }
